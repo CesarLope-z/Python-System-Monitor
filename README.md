@@ -11,7 +11,7 @@ Construir progresivamente un proyecto real para portafolio, empezando por una es
 El proyecto contiene una base educativa de consola con variables, condicionales,
 funciones, módulos, manejo básico de errores y una clase coordinadora. Actualmente
 recopila el uso de CPU y memoria RAM, genera alertas configurables y guarda
-reportes de texto y JSON.
+información de discos y procesos, además de reportes de texto y JSON.
 
 ## Estructura del proyecto
 
@@ -24,6 +24,7 @@ pc-monitor/
 │   ├── memory.py
 │   ├── disk.py
 │   ├── network.py
+│   ├── processes.py
 │   ├── pc_monitor.py
 │   ├── report.py
 │   └── system.py
@@ -40,6 +41,15 @@ pc-monitor/
 - Python 3
 - Entorno virtual de Python (`.venv`)
 - psutil
+
+## Funcionalidades actuales
+
+- Monitoreo de uso de CPU y memoria RAM.
+- Uso total, usado y libre del disco.
+- Lista de procesos principales por consumo de memoria.
+- Alertas configurables para CPU y memoria.
+- Historial de sesiones en formato JSON.
+- Reportes de texto legibles.
 
 ## Instalación
 
@@ -81,7 +91,7 @@ Proyecto: PC Monitor
 Autor: Cesar Lopez
 Versión: 1
 Estado: Detenido
-Módulos planificados: ['CPU', 'Memoria RAM', 'Discos']
+Módulos planificados: ['CPU', 'Memoria RAM', 'Discos', 'Procesos']
 Sistema: status: OK
 
 Reporte guardado en: reports\system_report.txt
@@ -89,9 +99,12 @@ Contenido del reporte:
 PC Monitor - Reporte básico
 Uso de CPU: 12.3%
 Uso de memoria RAM: 48.7%
+Disco (.): 69.6% usado | 141.37 GB libres de 465.18 GB
 Fecha y hora: 2026-09-18T22:39:28
+Procesos principales por uso de memoria:
+- proceso.exe (PID 1234): RAM 4.20% | CPU 1.00%
 
-Resumen de la sesión: {'samples': 3, 'cpu_average': 45.2, 'cpu_max': 81.4, 'memory_average': 48.7, 'memory_max': 50.1}
+Resumen de la sesión: {'samples': 3, 'cpu_average': 45.2, 'cpu_max': 81.4, 'memory_average': 48.7, 'memory_max': 50.1, 'disk_average': 69.6, 'disk_max': 69.6}
 Sesión JSON guardada en: reports\session.json
 ```
 
@@ -99,8 +112,9 @@ Sesión JSON guardada en: reports\session.json
 
 - [x] Crear la primera función de monitoreo de CPU.
 - [x] Agregar información de memoria RAM.
-- [ ] Agregar información de discos.
+- [x] Agregar información de discos.
 - [ ] Agregar información del sistema y la red.
+- [x] Agregar información básica de procesos.
 - [x] Incorporar alertas de CPU y memoria.
 - [x] Generar reportes.
 - [ ] Evaluar una interfaz gráfica y almacenamiento de datos.

@@ -245,6 +245,19 @@ data_again = json.loads(text)
 PC Monitor guarda el historial y el resumen de una sesión en
 `reports/session.json`. Cada muestra es un diccionario dentro de una lista.
 
+### Datos de disco
+
+`psutil.disk_usage()` recibe una ruta y devuelve información del espacio de la
+partición que contiene esa ruta:
+
+```python
+usage = psutil.disk_usage(".")
+print(usage.total, usage.used, usage.free, usage.percent)
+```
+
+Los valores de espacio vienen expresados en bytes. PC Monitor los convierte a
+gigabytes para hacer el reporte más legible.
+
 ## 9. Librerías externas
 
 Una librería externa es código creado por terceros que instalamos aparte de
@@ -288,6 +301,23 @@ instalación externa:
 - `time` para esperar entre muestras.
 - `statistics` para calcular promedios.
 - `json` para guardar datos estructurados.
+
+### Procesos
+
+`psutil.process_iter()` permite recorrer los procesos activos. Le pasamos una
+lista de atributos para solicitar solo los datos que necesitamos:
+
+```python
+for process in psutil.process_iter(["pid", "name", "memory_percent"]):
+    print(process.info)
+```
+
+Un proceso puede terminar justo mientras lo consultamos o puede no permitir
+acceso a sus datos. Por eso `monitor/processes.py` captura errores como
+`NoSuchProcess`, `AccessDenied` y `ZombieProcess`, y continúa con el siguiente.
+
+Los procesos se ordenan por `memory_percent` y se conserva únicamente la
+cantidad solicitada mediante `limit`.
 
 ## 10. Programación orientada a objetos
 

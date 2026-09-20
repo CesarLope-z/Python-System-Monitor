@@ -5,7 +5,9 @@ from statistics import mean
 import time
 
 from monitor.cpu import get_cpu_usage
+from monitor.disk import get_disk_usage
 from monitor.memory import get_memory_usage
+from monitor.processes import get_top_processes
 from monitor.report import (
     build_report,
     read_report,
@@ -26,6 +28,8 @@ class PCMonitor:
         version,
         report_path,
         session_path,
+        disk_path=".",
+        process_limit=5,
         cpu_limit=80,
         memory_limit=80,
         samples=3,
@@ -36,6 +40,8 @@ class PCMonitor:
         self.version = version
         self.report_path = report_path
         self.session_path = session_path
+        self.disk_path = disk_path
+        self.process_limit = process_limit
         self.cpu_limit = cpu_limit
         self.memory_limit = memory_limit
         self.samples = samples
@@ -54,6 +60,8 @@ class PCMonitor:
             raise ValueError("samples debe ser mayor que cero")
         if self.delay < 0:
             raise ValueError("delay no puede ser negativo")
+        if self.process_limit < 1:
+            raise ValueError("process_limit debe ser mayor que cero")
 
     def show_project_status(self, modules):
         """Muestra la información general del proyecto."""
@@ -66,6 +74,8 @@ class PCMonitor:
         print("Módulos planificados:", modules)
         print("Límite de CPU:", f"{self.cpu_limit}%")
         print("Límite de memoria RAM:", f"{self.memory_limit}%")
+        print("Ruta del disco:", self.disk_path)
+        print("Procesos mostrados:", self.process_limit)
 
     def collect_snapshot(self):
         """Obtiene una medición y la agrega al historial."""
@@ -73,6 +83,8 @@ class PCMonitor:
             "timestamp": datetime.now().isoformat(timespec="seconds"),
             "cpu": get_cpu_usage(),
             "memory": get_memory_usage(),
+            "disk": get_disk_usage(self.disk_path),
+            "processes": get_top_processes(self.process_limit),
         }
         self.history.append(snapshot)
         return snapshot
@@ -115,7 +127,9 @@ class PCMonitor:
                 print(
                     f"\nMuestra {index + 1}/{samples}: "
                     f"CPU {snapshot['cpu']:.1f}% | "
-                    f"RAM {snapshot['memory']:.1f}%"
+                    f"RAM {snapshot['memory']:.1f}% | "
+                    f"Disco {snapshot['disk']['percent']:.1f}% | "
+                    f"Procesos {len(snapshot['processes'])}"
                 )
 
                 for alert in self.check_alerts(snapshot):
@@ -137,6 +151,7 @@ class PCMonitor:
 
         cpu_values = [snapshot["cpu"] for snapshot in self.history]
         memory_values = [snapshot["memory"] for snapshot in self.history]
+        disk_values = [snapshot["disk"]["percent"] for snapshot in self.history]
 
         return {
             "samples": len(self.history),
@@ -144,6 +159,8 @@ class PCMonitor:
             "cpu_max": round(max(cpu_values), 2),
             "memory_average": round(mean(memory_values), 2),
             "memory_max": round(max(memory_values), 2),
+            "disk_average": round(mean(disk_values), 2),
+            "disk_max": round(max(disk_values), 2),
         }
 
     def save_current_report(self):

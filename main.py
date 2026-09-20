@@ -3,7 +3,7 @@ from pathlib import Path
 from monitor.pc_monitor import PCMonitor
 
 
-PLANNED_MODULES = ["CPU", "Memoria RAM", "Discos"]
+PLANNED_MODULES = ["CPU", "Memoria RAM", "Discos", "Procesos"]
 
 def main():
     """Punto de entrada de la aplicación."""
@@ -13,6 +13,8 @@ def main():
         version=1,
         report_path=Path("reports") / "system_report.txt",
         session_path=Path("reports") / "session.json",
+        disk_path=".",
+        process_limit=5,
         cpu_limit=80,
         memory_limit=80,
         samples=3,

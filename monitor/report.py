@@ -4,12 +4,27 @@ import json
 
 
 def build_report(snapshot):
-    return (
-        "PC Monitor - Reporte básico\n"
-        f"Uso de CPU: {snapshot['cpu']:.1f}%\n"
-        f"Uso de memoria RAM: {snapshot['memory']:.1f}%\n"
-        f"Fecha y hora: {snapshot['timestamp']}\n"
-    )
+    disk = snapshot["disk"]
+    report_lines = [
+        "PC Monitor - Reporte básico",
+        f"Uso de CPU: {snapshot['cpu']:.1f}%",
+        f"Uso de memoria RAM: {snapshot['memory']:.1f}%",
+        (
+            f"Disco ({disk['path']}): {disk['percent']:.1f}% usado | "
+            f"{disk['free_gb']:.2f} GB libres de {disk['total_gb']:.2f} GB"
+        ),
+        f"Fecha y hora: {snapshot['timestamp']}",
+        "Procesos principales por uso de memoria:",
+    ]
+
+    for process in snapshot["processes"]:
+        report_lines.append(
+            f"- {process['name']} (PID {process['pid']}): "
+            f"RAM {process['memory_percent']:.2f}% | "
+            f"CPU {process['cpu_percent']:.2f}%"
+        )
+
+    return "\n".join(report_lines) + "\n"
 
 
 def save_report(content, file_path):
