@@ -3,14 +3,7 @@ from pathlib import Path
 from monitor.pc_monitor import PCMonitor
 
 
-PLANNED_MODULES = [
-    "CPU",
-    "Memoria RAM",
-    "Discos",
-    "Procesos",
-    "Sistema",
-    "Red",
-]
+PLANNED_MODULES = ["CPU", "Memoria RAM", "Discos", "Procesos"]
 
 def main():
     """Punto de entrada de la aplicación."""
@@ -24,6 +17,7 @@ def main():
         process_limit=5,
         cpu_limit=80,
         memory_limit=80,
+        disk_limit=90,
         samples=3,
         delay=2,
     )
@@ -31,18 +25,6 @@ def main():
     try:
         monitor.show_project_status(PLANNED_MODULES)
         print("Sistema:", monitor.get_system_status())
-
-        system_info = monitor.get_system_info()
-        network_info = monitor.get_network_info()
-        print(
-            "Sistema operativo:",
-            system_info["operating_system"],
-            system_info["release"],
-        )
-        print("Hostname:", system_info["hostname"])
-        print("Uptime:", system_info["uptime"])
-        print("IP local:", network_info["local_ip"])
-        print("Interfaces de red:", len(network_info["interfaces"]))
 
         monitor.run_session()
         monitor.save_current_report()
