@@ -5,8 +5,14 @@ import json
 
 def build_report(snapshot):
     disk = snapshot["disk"]
+    system = snapshot["system"]
+    network = snapshot["network"]
     report_lines = [
         "PC Monitor - Reporte básico",
+        f"Sistema operativo: {system['operating_system']} {system['release']}",
+        f"Hostname: {system['hostname']}",
+        f"Uptime: {system['uptime']}",
+        f"IP local: {network['local_ip']}",
         f"Uso de CPU: {snapshot['cpu']:.1f}%",
         f"Uso de memoria RAM: {snapshot['memory']:.1f}%",
         (
@@ -14,8 +20,21 @@ def build_report(snapshot):
             f"{disk['free_gb']:.2f} GB libres de {disk['total_gb']:.2f} GB"
         ),
         f"Fecha y hora: {snapshot['timestamp']}",
-        "Procesos principales por uso de memoria:",
+        (
+            f"Red: {len(network['interfaces'])} interfaces | "
+            f"Enviados: {network['bytes_sent']} bytes | "
+            f"Recibidos: {network['bytes_received']} bytes"
+        ),
+        "Interfaces de red:",
     ]
+
+    for interface in network["interfaces"]:
+        addresses = interface["ipv4"] + interface["ipv6"]
+        report_lines.append(
+            f"- {interface['name']}: {', '.join(addresses) or 'sin IP'}"
+        )
+
+    report_lines.append("Procesos principales por uso de memoria:")
 
     for process in snapshot["processes"]:
         report_lines.append(

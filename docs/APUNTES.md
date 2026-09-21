@@ -302,6 +302,45 @@ instalación externa:
 - `statistics` para calcular promedios.
 - `json` para guardar datos estructurados.
 
+### Información del sistema
+
+La librería estándar `platform` permite consultar datos del sistema operativo:
+
+```python
+import platform
+
+operating_system = platform.system()
+release = platform.release()
+machine = platform.machine()
+```
+
+Usamos `socket.gethostname()` para obtener el nombre del equipo. Para calcular el
+tiempo encendido restamos la hora de inicio del sistema a la hora actual:
+
+```python
+uptime_seconds = time.time() - psutil.boot_time()
+```
+
+La función `divmod()` ayuda a convertir segundos en días, horas, minutos y
+segundos.
+
+### Información de red
+
+`socket.gethostbyname()` obtiene una dirección IPv4 asociada al hostname. Para
+conocer todas las interfaces usamos `psutil.net_if_addrs()`:
+
+```python
+for name, addresses in psutil.net_if_addrs().items():
+    print(name, addresses)
+```
+
+También usamos `psutil.net_io_counters()` para consultar los bytes enviados y
+recibidos desde el inicio del sistema. Estos contadores son acumulados; no
+representan la velocidad instantánea de la conexión.
+
+Los resultados se convierten a diccionarios y listas antes de agregarlos al
+historial, porque esos tipos pueden serializarse directamente a JSON.
+
 ### Procesos
 
 `psutil.process_iter()` permite recorrer los procesos activos. Le pasamos una

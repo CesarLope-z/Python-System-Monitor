@@ -7,6 +7,7 @@ import time
 from monitor.cpu import get_cpu_usage
 from monitor.disk import get_disk_usage
 from monitor.memory import get_memory_usage
+from monitor.network import get_network_info as collect_network_info
 from monitor.processes import get_top_processes
 from monitor.report import (
     build_report,
@@ -15,6 +16,7 @@ from monitor.report import (
     save_report,
     save_session,
 )
+from monitor.system import get_system_info as collect_system_info
 from monitor.system import get_system_status
 
 
@@ -85,6 +87,8 @@ class PCMonitor:
             "memory": get_memory_usage(),
             "disk": get_disk_usage(self.disk_path),
             "processes": get_top_processes(self.process_limit),
+            "system": collect_system_info(),
+            "network": collect_network_info(),
         }
         self.history.append(snapshot)
         return snapshot
@@ -129,7 +133,8 @@ class PCMonitor:
                     f"CPU {snapshot['cpu']:.1f}% | "
                     f"RAM {snapshot['memory']:.1f}% | "
                     f"Disco {snapshot['disk']['percent']:.1f}% | "
-                    f"Procesos {len(snapshot['processes'])}"
+                    f"Procesos {len(snapshot['processes'])} | "
+                    f"IP {snapshot['network']['local_ip']}"
                 )
 
                 for alert in self.check_alerts(snapshot):
@@ -189,3 +194,11 @@ class PCMonitor:
     def get_system_status(self):
         """Consulta el estado básico del sistema."""
         return get_system_status()
+
+    def get_system_info(self):
+        """Consulta información del sistema operativo y el equipo."""
+        return collect_system_info()
+
+    def get_network_info(self):
+        """Consulta información de red e interfaces disponibles."""
+        return collect_network_info()
