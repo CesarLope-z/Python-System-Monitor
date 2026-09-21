@@ -47,6 +47,8 @@ pc-monitor/
 - Monitoreo de uso de CPU y memoria RAM.
 - Uso total, usado y libre del disco.
 - Lista de procesos principales por consumo de memoria.
+- Información del sistema operativo, hostname y uptime.
+- Dirección IP local, interfaces y tráfico de red acumulado.
 - Alertas configurables para CPU y memoria.
 - Historial de sesiones en formato JSON.
 - Reportes de texto legibles.
@@ -91,8 +93,13 @@ Proyecto: PC Monitor
 Autor: Cesar Lopez
 Versión: 1
 Estado: Detenido
-Módulos planificados: ['CPU', 'Memoria RAM', 'Discos', 'Procesos']
+Módulos planificados: ['CPU', 'Memoria RAM', 'Discos', 'Procesos', 'Sistema', 'Red']
 Sistema: status: OK
+Sistema operativo: Windows 10
+Hostname: DESKTOP-1TN96GE
+Uptime: 6d 23h 31m 58s
+IP local: 192.168.0.17
+Interfaces de red: 6
 
 Reporte guardado en: reports\system_report.txt
 Contenido del reporte:
@@ -113,7 +120,7 @@ Sesión JSON guardada en: reports\session.json
 - [x] Crear la primera función de monitoreo de CPU.
 - [x] Agregar información de memoria RAM.
 - [x] Agregar información de discos.
-- [ ] Agregar información del sistema y la red.
+- [x] Agregar información del sistema y la red.
 - [x] Agregar información básica de procesos.
 - [x] Incorporar alertas de CPU y memoria.
 - [x] Generar reportes.
