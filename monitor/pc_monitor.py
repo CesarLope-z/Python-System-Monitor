@@ -34,6 +34,7 @@ class PCMonitor:
         process_limit=5,
         cpu_limit=80,
         memory_limit=80,
+        disk_limit=90,
         samples=3,
         delay=2,
     ):
@@ -46,6 +47,7 @@ class PCMonitor:
         self.process_limit = process_limit
         self.cpu_limit = cpu_limit
         self.memory_limit = memory_limit
+        self.disk_limit = disk_limit
         self.samples = samples
         self.delay = delay
         self.is_running = False
@@ -64,6 +66,8 @@ class PCMonitor:
             raise ValueError("delay no puede ser negativo")
         if self.process_limit < 1:
             raise ValueError("process_limit debe ser mayor que cero")
+        if not 0 <= self.disk_limit <= 100:
+            raise ValueError("disk_limit debe estar entre 0 y 100")
 
     def show_project_status(self, modules):
         """Muestra la información general del proyecto."""
@@ -76,6 +80,7 @@ class PCMonitor:
         print("Módulos planificados:", modules)
         print("Límite de CPU:", f"{self.cpu_limit}%")
         print("Límite de memoria RAM:", f"{self.memory_limit}%")
+        print("Límite de disco:", f"{self.disk_limit}%")
         print("Ruta del disco:", self.disk_path)
         print("Procesos mostrados:", self.process_limit)
 
@@ -107,6 +112,12 @@ class PCMonitor:
             alerts.append(
                 f"ALERTA: uso de memoria RAM elevado: {snapshot['memory']:.1f}% "
                 f"(límite: {self.memory_limit}%)"
+            )
+
+        if snapshot["disk"]["percent"] >= self.disk_limit:
+            alerts.append(
+                f"ALERTA: uso de disco elevado: {snapshot['disk']['percent']:.1f}% "
+                f"(límite: {self.disk_limit}%)"
             )
 
         return alerts
