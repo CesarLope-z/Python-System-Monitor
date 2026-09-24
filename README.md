@@ -18,12 +18,15 @@ información de discos y procesos, además de reportes de texto y JSON.
 ```text
 pc-monitor/
 ├── main.py
+├── main_gui.py
 ├── monitor/
 │   ├── __init__.py
 │   ├── cpu.py
 │   ├── memory.py
 │   ├── disk.py
 │   ├── network.py
+│   ├── database.py
+│   ├── gui.py
 │   ├── processes.py
 │   ├── pc_monitor.py
 │   ├── report.py
@@ -31,6 +34,8 @@ pc-monitor/
 ├── reports/
 ├── docs/
 │   └── APUNTES.md
+├── sql/
+│   └── create_database.sql
 ├── requirements.txt
 ├── .gitignore
 └── README.md
@@ -41,6 +46,9 @@ pc-monitor/
 - Python 3
 - Entorno virtual de Python (`.venv`)
 - psutil
+- tkinter/ttk
+- pyodbc
+- SQL Server (opcional)
 
 ## Funcionalidades actuales
 
@@ -52,6 +60,39 @@ pc-monitor/
 - Alertas configurables para CPU y memoria.
 - Historial de sesiones en formato JSON.
 - Reportes de texto legibles.
+- Interfaz gráfica de escritorio.
+- Guardado opcional de mediciones en SQL Server.
+
+## Interfaz gráfica
+
+La interfaz usa `tkinter` y `ttk`, módulos incluidos con Python. Para iniciarla:
+
+```powershell
+python main_gui.py
+```
+
+La ventana permite actualizar CPU, memoria, disco, sistema, red y procesos.
+También contiene un botón para guardar la última medición en SQL Server.
+
+## SQL Server
+
+SSMS es el cliente de administración; también necesitas tener instalado el motor
+de SQL Server y el driver ODBC de Microsoft. Ejecuta
+`sql/create_database.sql` desde SSMS para crear la base `PCMonitor` y sus tablas.
+
+Después configura la cadena de conexión en PowerShell. Para una instancia local
+con autenticación de Windows:
+
+```powershell
+$env:PC_MONITOR_DB_CONNECTION = "Driver={ODBC Driver 18 for SQL Server};Server=localhost\SQLEXPRESS;Database=PCMonitor;Trusted_Connection=yes;Encrypt=no;TrustServerCertificate=yes;"
+python main_gui.py
+```
+
+El botón "Guardar en SQL Server" insertará una fila en `monitor_readings` y las
+filas de procesos relacionadas en `process_snapshots`.
+
+Para autenticación de SQL Server, utiliza `UID` y `PWD` en la cadena y nunca
+guardes la contraseña directamente en el código ni en Git.
 
 ## Instalación
 
@@ -124,7 +165,8 @@ Sesión JSON guardada en: reports\session.json
 - [x] Agregar información básica de procesos.
 - [x] Incorporar alertas de CPU y memoria.
 - [x] Generar reportes.
-- [ ] Evaluar una interfaz gráfica y almacenamiento de datos.
+- [x] Crear una interfaz gráfica inicial.
+- [x] Preparar almacenamiento opcional en SQL Server.
 
 ## Aprendizaje
 
