@@ -408,3 +408,42 @@ los atributos del objeto:
 ```python
 monitor.create_report()
 ```
+
+## 11. Interfaz gráfica y almacenamiento
+
+La interfaz usa `tkinter`, una biblioteca incluida con Python. `ttk` proporciona
+controles con un estilo más moderno. Una aplicación gráfica trabaja con eventos:
+
+```python
+button = ttk.Button(root, text="Actualizar", command=refresh_metrics)
+```
+
+El parámetro `command` indica qué función se ejecutará cuando el usuario pulse
+el botón. `root.mainloop()` mantiene abierta la ventana y procesa los eventos.
+
+Para SQL Server usamos `pyodbc`, un puente entre Python y ODBC. La clase
+`DatabaseRepository` mantiene separada la persistencia de la interfaz:
+
+```python
+repository = DatabaseRepository()
+reading_id = repository.save_snapshot(snapshot)
+```
+
+Las consultas usan `?` y parámetros separados, en lugar de concatenar valores
+en el SQL. Esto mejora la seguridad y evita errores de formato:
+
+```python
+cursor.execute(
+    "INSERT INTO readings (cpu_percent) VALUES (?)",
+    cpu_value,
+)
+```
+
+La cadena de conexión se obtiene de `PC_MONITOR_DB_CONNECTION`, no del código
+fuente. `python-dotenv` carga esa variable desde `.env` al iniciar la aplicación.
+Así las credenciales no deben guardarse en Git. El archivo `.env.example` sirve
+como plantilla sin secretos.
+
+La tabla `monitor_readings` guarda una medición general y
+`process_snapshots` guarda los procesos asociados a esa medición mediante una
+clave foránea.

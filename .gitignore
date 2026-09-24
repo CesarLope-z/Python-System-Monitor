@@ -10,6 +10,7 @@ __pycache__/
 .coverage
 .DS_Store
 Thumbs.db
+.env
 
 # Reportes generados localmente
 reports/*
