@@ -3,6 +3,11 @@
 from datetime import datetime
 import os
 
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
 
 class DatabaseRepository:
     """Guarda snapshots de PC Monitor en una base de datos SQL Server."""

@@ -88,6 +88,17 @@ $env:PC_MONITOR_DB_CONNECTION = "Driver={ODBC Driver 18 for SQL Server};Server=l
 python main_gui.py
 ```
 
+También puedes almacenarla en un archivo `.env` local. Copia `.env.example` como
+`.env` y modifica `Server` si tu instancia tiene otro nombre:
+
+```powershell
+Copy-Item .env.example .env
+python main_gui.py
+```
+
+La aplicación carga `.env` mediante `python-dotenv`. El archivo `.env` está
+excluido por `.gitignore`; nunca guardes contraseñas reales en GitHub.
+
 El botón "Guardar en SQL Server" insertará una fila en `monitor_readings` y las
 filas de procesos relacionadas en `process_snapshots`.
 

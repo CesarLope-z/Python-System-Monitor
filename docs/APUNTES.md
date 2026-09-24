@@ -440,7 +440,9 @@ cursor.execute(
 ```
 
 La cadena de conexión se obtiene de `PC_MONITOR_DB_CONNECTION`, no del código
-fuente. Así las credenciales no deben guardarse en Git.
+fuente. `python-dotenv` carga esa variable desde `.env` al iniciar la aplicación.
+Así las credenciales no deben guardarse en Git. El archivo `.env.example` sirve
+como plantilla sin secretos.
 
 La tabla `monitor_readings` guarda una medición general y
 `process_snapshots` guarda los procesos asociados a esa medición mediante una
